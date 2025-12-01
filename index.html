@@ -1,0 +1,1536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Macbeth Act 3: Interactive Learning Activities</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            color: #e9e9e9;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, rgba(139, 0, 0, 0.8), rgba(75, 0, 130, 0.8));
+            border-radius: 20px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            border: 2px solid rgba(255, 215, 0, 0.3);
+        }
+
+        h1 {
+            font-size: 3em;
+            color: #ffd700;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.7);
+            margin-bottom: 10px;
+            font-style: italic;
+        }
+
+        .subtitle {
+            font-size: 1.3em;
+            color: #c9a0dc;
+            font-style: italic;
+            margin-bottom: 20px;
+        }
+
+        .instructions {
+            background: rgba(255, 215, 0, 0.1);
+            border: 2px solid #ffd700;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            text-align: left;
+            color: #ffd700;
+        }
+
+        .instructions h3 {
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        .instructions ul {
+            margin-left: 20px;
+            line-height: 1.8;
+        }
+
+        .lives-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            background: rgba(20, 20, 40, 0.8);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border: 2px solid #ffd700;
+        }
+
+        .lives {
+            display: flex;
+            gap: 10px;
+            font-size: 2em;
+        }
+
+        .life {
+            transition: all 0.3s ease;
+        }
+
+        .life.lost {
+            opacity: 0.2;
+            filter: grayscale(100%);
+        }
+
+        .lives-text {
+            font-size: 1.5em;
+            color: #ffd700;
+            font-weight: bold;
+        }
+
+        .activity-nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+
+        .nav-btn {
+            padding: 15px 30px;
+            background: linear-gradient(135deg, #8b0000, #4b0082);
+            color: #ffd700;
+            border: 2px solid #ffd700;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+
+        .nav-btn:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255, 215, 0, 0.4);
+            background: linear-gradient(135deg, #a01010, #5b0099);
+        }
+
+        .nav-btn.active {
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            color: #1a1a2e;
+            border-color: #1a1a2e;
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            filter: grayscale(100%);
+        }
+
+        .nav-btn.completed::after {
+            content: "✓";
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #90ee90;
+            color: #1a1a2e;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8em;
+            border: 2px solid #1a1a2e;
+        }
+
+        .activity-section {
+            display: none;
+            background: rgba(30, 30, 60, 0.9);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            border: 2px solid rgba(255, 215, 0, 0.2);
+            margin-bottom: 30px;
+        }
+
+        .activity-section.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            color: #ffd700;
+            font-size: 2.2em;
+            margin-bottom: 30px;
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .activity-intro {
+            text-align: center;
+            font-size: 1.1em;
+            color: #c9a0dc;
+            margin-bottom: 30px;
+            font-style: italic;
+        }
+
+        /* Drag and Drop Cloze Styles */
+        .cloze-container {
+            background: rgba(20, 20, 40, 0.6);
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border: 2px solid rgba(255, 215, 0, 0.2);
+        }
+
+        .cloze-text {
+            font-size: 1.2em;
+            line-height: 2.2;
+            margin-bottom: 30px;
+        }
+
+        .drop-zone {
+            display: inline-block;
+            min-width: 150px;
+            padding: 8px 15px;
+            background: rgba(139, 0, 0, 0.4);
+            border: 2px dashed #ffd700;
+            border-radius: 8px;
+            margin: 0 5px;
+            min-height: 40px;
+            vertical-align: middle;
+            transition: all 0.3s ease;
+        }
+
+        .drop-zone.drag-over {
+            background: rgba(255, 215, 0, 0.3);
+            border-style: solid;
+            transform: scale(1.05);
+        }
+
+        .drop-zone.filled {
+            background: rgba(0, 100, 0, 0.4);
+            border-style: solid;
+            border-color: #90ee90;
+        }
+
+        .drop-zone.incorrect {
+            background: rgba(139, 0, 0, 0.6);
+            border-color: #ff6b6b;
+            animation: shake 0.5s;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .word-bank {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(75, 0, 130, 0.3);
+            border-radius: 10px;
+        }
+
+        .draggable-word {
+            padding: 12px 20px;
+            background: linear-gradient(135deg, #8b0000, #4b0082);
+            color: #fff;
+            border: 2px solid #ffd700;
+            border-radius: 8px;
+            cursor: move;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .draggable-word:hover {
+            transform: scale(1.1);
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.4);
+        }
+
+        .draggable-word.dragging {
+            opacity: 0.5;
+        }
+
+        /* True/False Styles */
+        .tf-question {
+            background: rgba(20, 20, 40, 0.6);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            border-left: 5px solid #ffd700;
+        }
+
+        .tf-question p {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .tf-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .tf-btn {
+            padding: 15px 40px;
+            font-size: 1.1em;
+            font-weight: bold;
+            border: 2px solid;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .tf-btn.true {
+            background: linear-gradient(135deg, #2d5016, #4a7c2f);
+            color: #90ee90;
+            border-color: #90ee90;
+        }
+
+        .tf-btn.false {
+            background: linear-gradient(135deg, #5a1616, #8b0000);
+            color: #ff6b6b;
+            border-color: #ff6b6b;
+        }
+
+        .tf-btn:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .tf-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .tf-btn.correct {
+            animation: pulse 0.5s;
+            box-shadow: 0 0 30px rgba(144, 238, 144, 0.8);
+        }
+
+        .tf-btn.incorrect {
+            animation: shake 0.5s;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        /* Matching Activity Styles */
+        .matching-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-top: 30px;
+        }
+
+        .matching-column {
+            background: rgba(20, 20, 40, 0.6);
+            padding: 25px;
+            border-radius: 15px;
+            border: 2px solid rgba(255, 215, 0, 0.2);
+        }
+
+        .matching-column h3 {
+            color: #ffd700;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .match-item {
+            padding: 20px;
+            margin: 15px 0;
+            background: linear-gradient(135deg, rgba(139, 0, 0, 0.4), rgba(75, 0, 130, 0.4));
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            font-size: 1.1em;
+        }
+
+        .match-item:hover:not(.matched) {
+            transform: translateX(5px);
+            border-color: #ffd700;
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .match-item.selected {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.4), rgba(255, 237, 78, 0.4));
+            border-color: #ffd700;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+        }
+
+        .match-item.matched {
+            background: linear-gradient(135deg, rgba(0, 100, 0, 0.5), rgba(50, 205, 50, 0.5));
+            border-color: #90ee90;
+            cursor: default;
+            opacity: 0.7;
+        }
+
+        .match-item.matched::after {
+            content: "✓";
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.5em;
+            color: #90ee90;
+        }
+
+        /* Multiple Choice Styles */
+        .mc-question {
+            background: rgba(20, 20, 40, 0.6);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            border-left: 5px solid #ffd700;
+        }
+
+        .mc-question h3 {
+            color: #ffd700;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+        }
+
+        .mc-options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .mc-option {
+            padding: 15px 20px;
+            background: linear-gradient(135deg, rgba(139, 0, 0, 0.4), rgba(75, 0, 130, 0.4));
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.1em;
+        }
+
+        .mc-option:hover:not(.disabled) {
+            border-color: #ffd700;
+            transform: translateX(10px);
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .mc-option.correct {
+            background: linear-gradient(135deg, rgba(0, 100, 0, 0.5), rgba(50, 205, 50, 0.5));
+            border-color: #90ee90;
+            animation: pulse 0.5s;
+        }
+
+        .mc-option.incorrect {
+            background: linear-gradient(135deg, rgba(139, 0, 0, 0.6), rgba(178, 34, 34, 0.6));
+            border-color: #ff6b6b;
+            animation: shake 0.5s;
+        }
+
+        .mc-option.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Check Button */
+        .check-btn {
+            display: block;
+            margin: 30px auto;
+            padding: 15px 50px;
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            color: #1a1a2e;
+            border: 3px solid #1a1a2e;
+            border-radius: 15px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .check-btn:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255, 215, 0, 0.6);
+        }
+
+        .check-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Feedback Styles */
+        .feedback {
+            text-align: center;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 15px;
+            font-size: 1.3em;
+            font-weight: bold;
+            animation: fadeIn 0.5s;
+        }
+
+        .feedback.success {
+            background: rgba(0, 100, 0, 0.3);
+            color: #90ee90;
+            border: 2px solid #90ee90;
+        }
+
+        .feedback.error {
+            background: rgba(139, 0, 0, 0.3);
+            color: #ff6b6b;
+            border: 2px solid #ff6b6b;
+        }
+
+        .feedback.partial {
+            background: rgba(255, 165, 0, 0.3);
+            color: #ffa500;
+            border: 2px solid #ffa500;
+        }
+
+        /* Progress Indicator */
+        .progress-container {
+            background: rgba(20, 20, 40, 0.6);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background: rgba(139, 0, 0, 0.4);
+            border-radius: 15px;
+            overflow: hidden;
+            border: 2px solid #ffd700;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ffd700, #ffed4e);
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #1a1a2e;
+            font-weight: bold;
+        }
+
+        /* Game Over Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.active {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            padding: 50px;
+            border-radius: 20px;
+            text-align: center;
+            border: 3px solid #ffd700;
+            box-shadow: 0 0 50px rgba(255, 215, 0, 0.5);
+            max-width: 500px;
+        }
+
+        .modal-content h2 {
+            color: #ff6b6b;
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+
+        .modal-content p {
+            font-size: 1.3em;
+            margin-bottom: 30px;
+            color: #c9a0dc;
+        }
+
+        .modal-btn {
+            padding: 15px 40px;
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            color: #1a1a2e;
+            border: 3px solid #1a1a2e;
+            border-radius: 15px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .modal-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 5px 20px rgba(255, 215, 0, 0.6);
+        }
+
+        /* Final Boss Styles */
+        .boss-container {
+            background: linear-gradient(135deg, rgba(139, 0, 0, 0.8), rgba(75, 0, 130, 0.8));
+            padding: 40px;
+            border-radius: 20px;
+            border: 3px solid #ffd700;
+            box-shadow: 0 0 40px rgba(255, 215, 0, 0.5);
+        }
+
+        .boss-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .boss-header h2 {
+            font-size: 3em;
+            color: #ff6b6b;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.7);
+            margin-bottom: 10px;
+        }
+
+        .boss-score {
+            font-size: 1.5em;
+            color: #ffd700;
+            margin-bottom: 20px;
+        }
+
+        .boss-question {
+            background: rgba(20, 20, 40, 0.8);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            border: 2px solid rgba(255, 215, 0, 0.3);
+        }
+
+        .boss-question h4 {
+            color: #ffd700;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+
+        .boss-option {
+            padding: 12px 20px;
+            margin: 10px 0;
+            background: rgba(75, 0, 130, 0.4);
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .boss-option:hover:not(.selected):not(.disabled) {
+            border-color: #ffd700;
+            transform: translateX(5px);
+        }
+
+        .boss-option.selected {
+            background: rgba(255, 215, 0, 0.3);
+            border-color: #ffd700;
+        }
+
+        .boss-option.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .submit-boss {
+            display: block;
+            margin: 40px auto;
+            padding: 20px 60px;
+            background: linear-gradient(135deg, #ff6b6b, #ff4444);
+            color: #fff;
+            border: 3px solid #fff;
+            border-radius: 15px;
+            font-size: 1.5em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .submit-boss:hover:not(:disabled) {
+            transform: scale(1.1);
+            box-shadow: 0 8px 30px rgba(255, 107, 107, 0.6);
+        }
+
+        .submit-boss:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+            }
+
+            .matching-container {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-btn {
+                padding: 12px 20px;
+                font-size: 1em;
+            }
+
+            .activity-section {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎭 Macbeth: Act 3, Scenes 1-4 🎭</h1>
+            <p class="subtitle">"Blood will have blood..."</p>
+            
+            <div class="instructions">
+                <h3>📚 How to Play:</h3>
+                <ul>
+                    <li>Complete each activity in order to unlock the next one</li>
+                    <li>You have <strong>3 lives</strong> - lose them all and you start over!</li>
+                    <li>Each wrong answer costs you one life</li>
+                    <li>Read feedback carefully when you make mistakes</li>
+                    <li>Complete all 5 activities to unlock the FINAL BOSS challenge</li>
+                    <li>The Final Boss is worth 20 points - you only get ONE attempt!</li>
+                </ul>
+            </div>
+        </header>
+
+        <div class="lives-container">
+            <span class="lives-text">Lives:</span>
+            <div class="lives" id="livesDisplay">
+                <span class="life">❤️</span>
+                <span class="life">❤️</span>
+                <span class="life">❤️</span>
+            </div>
+        </div>
+
+        <div class="activity-nav">
+            <button class="nav-btn active" onclick="showActivity('cloze')" id="nav-cloze">📝 Activity 1</button>
+            <button class="nav-btn" onclick="showActivity('truefalse')" id="nav-truefalse" disabled>✓✗ Activity 2</button>
+            <button class="nav-btn" onclick="showActivity('matching')" id="nav-matching" disabled>🔗 Activity 3</button>
+            <button class="nav-btn" onclick="showActivity('multiple')" id="nav-multiple" disabled>📋 Activity 4</button>
+            <button class="nav-btn" onclick="showActivity('cloze2')" id="nav-cloze2" disabled>📝 Activity 5</button>
+            <button class="nav-btn" onclick="showActivity('boss')" id="nav-boss" disabled>👹 FINAL BOSS</button>
+        </div>
+
+        <!-- Activity 1: Drag and Drop Cloze -->
+        <div id="cloze" class="activity-section active">
+            <h2>Activity 1: Drag and Drop - Banquo's Suspicions</h2>
+            <p class="activity-intro">Drag the correct words to complete the passage about Banquo's thoughts.</p>
+            
+            <div class="cloze-container">
+                <div class="cloze-text">
+                    Banquo suspects that Macbeth <span class="drop-zone" data-answer="murdered"></span> Duncan to become 
+                    <span class="drop-zone" data-answer="king"></span>. The words "<span class="drop-zone" data-answer="foully"></span>" 
+                    and "I fear" highlight his <span class="drop-zone" data-answer="suspicion"></span> that Macbeth acted dishonestly. 
+                    However, Banquo is also tempted by the <span class="drop-zone" data-answer="prophecy"></span> about his children 
+                    becoming kings, but unlike Macbeth, he refuses to act through <span class="drop-zone" data-answer="evil"></span> means.
+                </div>
+                
+                <div class="word-bank" id="wordBank1">
+                    <div class="draggable-word" draggable="true">murdered</div>
+                    <div class="draggable-word" draggable="true">king</div>
+                    <div class="draggable-word" draggable="true">foully</div>
+                    <div class="draggable-word" draggable="true">suspicion</div>
+                    <div class="draggable-word" draggable="true">prophecy</div>
+                    <div class="draggable-word" draggable="true">evil</div>
+                    <div class="draggable-word" draggable="true">honor</div>
+                    <div class="draggable-word" draggable="true">power</div>
+                </div>
+            </div>
+            
+            <button class="check-btn" onclick="checkCloze('cloze')">Check Answers</button>
+            <div id="cloze-feedback"></div>
+        </div>
+
+        <!-- Activity 2: True or False -->
+        <div id="truefalse" class="activity-section">
+            <h2>Activity 2: True or False</h2>
+            <p class="activity-intro">Determine whether each statement is true or false.</p>
+            
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="tf-progress" style="width: 0%">0/6</div>
+                </div>
+            </div>
+
+            <div class="tf-question" data-answer="true" data-feedback="Correct! Banquo directly expresses his suspicion that Macbeth obtained the crown through foul play.|Not quite. Banquo says 'Thou hast it now... and I fear thou play'dst most foully for't' - he clearly suspects Macbeth.">
+                <p><strong>1.</strong> Banquo suspects that Macbeth "play'dst most foully" to become king.</p>
+                <div class="tf-buttons">
+                    <button class="tf-btn true" onclick="checkTF(this, true, 0)">TRUE</button>
+                    <button class="tf-btn false" onclick="checkTF(this, false, 0)">FALSE</button>
+                </div>
+                <div class="tf-feedback"></div>
+            </div>
+
+            <div class="tf-question" data-answer="false" data-feedback="Not quite. Unlike Macbeth, Banquo chooses not to act on his ambition through evil means.|Correct! Banquo has ambition but maintains his moral integrity, unlike Macbeth.">
+                <p><strong>2.</strong> Banquo decides to act on his ambition like Macbeth did.</p>
+                <div class="tf-buttons">
+                    <button class="tf-btn true" onclick="checkTF(this, true, 1)">TRUE</button>
+                    <button class="tf-btn false" onclick="checkTF(this, false, 1)">FALSE</button>
+                </div>
+                <div class="tf-feedback"></div>
+            </div>
+
+            <div class="tf-question" data-answer="true" data-feedback="Correct! Macbeth fears Banquo's 'royalty of nature' and wisdom, seeing him as a threat.|Incorrect. Macbeth specifically mentions Banquo's noble nature and wisdom as reasons to fear him.">
+                <p><strong>3.</strong> Macbeth fears Banquo because of his noble character and wisdom.</p>
+                <div class="tf-buttons">
+                    <button class="tf-btn true" onclick="checkTF(this, true, 2)">TRUE</button>
+                    <button class="tf-btn false" onclick="checkTF(this, false, 2)">FALSE</button>
+                </div>
+                <div class="tf-feedback"></div>
+            </div>
+
+            <div class="tf-question" data-answer="true" data-feedback="Correct! Macbeth wants to eliminate both Banquo and Fleance to prevent the prophecy.|Incorrect. Macbeth hires murderers to kill both father and son to thwart the witches' prophecy.">
+                <p><strong>4.</strong> Macbeth hires murderers to kill both Banquo and his son Fleance.</p>
+                <div class="tf-buttons">
+                    <button class="tf-btn true" onclick="checkTF(this, true, 3)">TRUE</button>
+                    <button class="tf-btn false" onclick="checkTF(this, false, 3)">FALSE</button>
+                </div>
+                <div class="tf-feedback"></div>
+            </div>
+
+            <div class="tf-question" data-answer="false" data-feedback="Incorrect. Macbeth's words are hypocritical - he pretends to miss Banquo while having just had him murdered.|Correct! Macbeth is being deeply ironic and hypocritical at the banquet.">
+                <p><strong>5.</strong> Macbeth genuinely misses Banquo and wishes he were at the banquet.</p>
+                <div class="tf-buttons">
+                    <button class="tf-btn true" onclick="checkTF(this, true, 4)">TRUE</button>
+                    <button class="tf-btn false" onclick="checkTF(this, false, 4)">FALSE</button>
+                </div>
+                <div class="tf-feedback"></div>
+            </div>
+
+            <div class="tf-question" data-answer="true" data-feedback="Correct! This metaphor shows Macbeth feels he's gone too far to turn back from his violent path.|Incorrect. This famous line shows Macbeth believes he's committed so deeply to violence that continuing is as easy as returning.">
+                <p><strong>6.</strong> Macbeth says he is "in blood stepped in so far" that returning would be as difficult as going forward.</p>
+                <div class="tf-buttons">
+                    <button class="tf-btn true" onclick="checkTF(this, true, 5)">TRUE</button>
+                    <button class="tf-btn false" onclick="checkTF(this, false, 5)">FALSE</button>
+                </div>
+                <div class="tf-feedback"></div>
+            </div>
+        </div>
+
+        <!-- Activity 3: Matching -->
+        <div id="matching" class="activity-section">
+            <h2>Activity 3: Match the Quotes to Their Meanings</h2>
+            <p class="activity-intro">Click on a quote, then click on its matching meaning.</p>
+            
+            <div class="matching-container">
+                <div class="matching-column">
+                    <h3>Quotes</h3>
+                    <div class="match-item" data-id="1">"play'dst most foully for't"</div>
+                    <div class="match-item" data-id="2">"Our fears in Banquo stick deep"</div>
+                    <div class="match-item" data-id="3">"fruitless crown"</div>
+                    <div class="match-item" data-id="4">"blood will have blood"</div>
+                    <div class="match-item" data-id="5">"I am in blood stepped in so far"</div>
+                </div>
+                
+                <div class="matching-column">
+                    <h3>Meanings</h3>
+                    <div class="match-item" data-id="5">Macbeth has gone too far to turn back</div>
+                    <div class="match-item" data-id="3">Macbeth's throne is worthless without heirs</div>
+                    <div class="match-item" data-id="1">Macbeth cheated to become king</div>
+                    <div class="match-item" data-id="4">Murder creates more murder</div>
+                    <div class="match-item" data-id="2">Macbeth is deeply afraid of Banquo</div>
+                </div>
+            </div>
+            
+            <div id="matching-feedback"></div>
+        </div>
+
+        <!-- Activity 4: Multiple Choice -->
+        <div id="multiple" class="activity-section">
+            <h2>Activity 4: Multiple Choice Questions</h2>
+            <p class="activity-intro">Choose the best answer for each question.</p>
+            
+            <div class="mc-question" data-correct="1" data-feedback="Correct! This dramatic irony is powerful - Macbeth acts concerned while he orchestrated the murder.|Not quite. Consider what Macbeth knows versus what he's saying to his guests. He arranged Banquo's murder.|Think about dramatic irony here - what does Macbeth know that the guests don't?|This misses the irony. Macbeth knows exactly where Banquo is because he ordered his death.">
+                <h3>1. What is ironic about Macbeth's words at the banquet?</h3>
+                <div class="mc-options">
+                    <div class="mc-option" data-index="0">A) He is genuinely sad that Banquo is missing</div>
+                    <div class="mc-option" data-index="1">B) He pretends to miss Banquo while having just murdered him</div>
+                    <div class="mc-option" data-index="2">C) He doesn't know that Banquo has been killed</div>
+                    <div class="mc-option" data-index="3">D) He is happy that Banquo is not there</div>
+                </div>
+                <div class="mc-feedback"></div>
+            </div>
+
+            <div class="mc-question" data-correct="2" data-feedback="Not quite. Banquo does have ambition - remember the witches' prophecy about his descendants.|Not quite. While Banquo is suspicious, he doesn't plot revenge. What does his soliloquy reveal?|Correct! Banquo's soliloquy shows he has ambition but maintains his moral compass, unlike Macbeth.|Not quite. Banquo clearly suspects Macbeth - he says 'I fear thou play'dst most foully for't.'">
+                <h3>2. What does Banquo's soliloquy reveal about his character?</h3>
+                <div class="mc-options">
+                    <div class="mc-option" data-index="0">A) He has no ambition at all</div>
+                    <div class="mc-option" data-index="1">B) He wants to kill Macbeth</div>
+                    <div class="mc-option" data-index="2">C) He has ambition but refuses to act through evil means</div>
+                    <div class="mc-option" data-index="3">D) He trusts Macbeth completely</div>
+                </div>
+                <div class="mc-feedback"></div>
+            </div>
+
+            <div class="mc-question" data-correct="1" data-feedback="Not quite. While Macbeth might worry about this, what specific prophecy motivates him?|Correct! The witches said Banquo's descendants would be kings, threatening Macbeth's legacy.|Not quite. While this might be a concern, the main reason relates to the witches' prophecy.|Not quite. Macbeth is beyond trying to impress Lady Macbeth at this point.">
+                <h3>3. Why does Macbeth want to kill Banquo and Fleance?</h3>
+                <div class="mc-options">
+                    <div class="mc-option" data-index="0">A) They have betrayed him</div>
+                    <div class="mc-option" data-index="1">B) To prevent the prophecy about Banquo's descendants becoming kings</div>
+                    <div class="mc-option" data-index="2">C) They know too many of his secrets</div>
+                    <div class="mc-option" data-index="3">D) He wants to impress Lady Macbeth</div>
+                </div>
+                <div class="mc-feedback"></div>
+            </div>
+
+            <div class="mc-question" data-correct="2" data-feedback="Not quite. This isn't about revenge being enjoyable - what pattern is Macbeth describing?|Not quite. This quote isn't about family relationships. What cycle is Macbeth recognizing?|Correct! Macbeth recognizes that murder leads to more murder in an unstoppable cycle of violence.|Not quite. This phrase is literal here - it's about actual bloodshed and violence, not family bonds.">
+                <h3>4. What theme is developed when Macbeth says "blood will have blood"?</h3>
+                <div class="mc-options">
+                    <div class="mc-option" data-index="0">A) Revenge is sweet</div>
+                    <div class="mc-option" data-index="1">B) Family bonds are important</div>
+                    <div class="mc-option" data-index="2">C) Violence leads to more violence in an endless cycle</div>
+                    <div class="mc-option" data-index="3">D) Blood is thicker than water</div>
+                </div>
+                <div class="mc-feedback"></div>
+            </div>
+        </div>
+
+        <!-- Activity 5: Advanced Cloze -->
+        <div id="cloze2" class="activity-section">
+            <h2>Activity 5: Advanced Fill in the Blanks</h2>
+            <p class="activity-intro">Complete these more challenging passages about Macbeth's state of mind.</p>
+            
+            <div class="cloze-container">
+                <div class="cloze-text">
+                    Macbeth realizes his crown is <span class="drop-zone" data-answer="fruitless"></span> because the witches 
+                    prophesied that <span class="drop-zone" data-answer="Banquo"></span>'s descendants would be kings, not his own. 
+                    At the banquet, Macbeth sees Banquo's <span class="drop-zone" data-answer="ghost"></span> sitting in his chair, 
+                    which reveals his <span class="drop-zone" data-answer="guilt"></span>. Macbeth claims he has gone too far to 
+                    <span class="drop-zone" data-answer="return"></span>, saying that going back would be as difficult as continuing forward. 
+                    The theme that <span class="drop-zone" data-answer="ambition"></span> leads to destruction becomes clear as Macbeth 
+                    plans even more <span class="drop-zone" data-answer="murders"></span>.
+                </div>
+                
+                <div class="word-bank" id="wordBank2">
+                    <div class="draggable-word" draggable="true">fruitless</div>
+                    <div class="draggable-word" draggable="true">Banquo</div>
+                    <div class="draggable-word" draggable="true">ghost</div>
+                    <div class="draggable-word" draggable="true">guilt</div>
+                    <div class="draggable-word" draggable="true">return</div>
+                    <div class="draggable-word" draggable="true">ambition</div>
+                    <div class="draggable-word" draggable="true">murders</div>
+                    <div class="draggable-word" draggable="true">happiness</div>
+                    <div class="draggable-word" draggable="true">crown</div>
+                </div>
+            </div>
+            
+            <button class="check-btn" onclick="checkCloze('cloze2')">Check Answers</button>
+            <div id="cloze2-feedback"></div>
+        </div>
+
+        <!-- Final Boss -->
+        <div id="boss" class="activity-section">
+            <div class="boss-container">
+                <div class="boss-header">
+                    <h2>👹 FINAL BOSS CHALLENGE 👹</h2>
+                    <p class="boss-score">Score: <span id="bossScore">0</span> / 20</p>
+                    <p style="color: #ff6b6b; font-size: 1.2em; font-style: italic;">WARNING: You only get ONE attempt! Choose wisely!</p>
+                </div>
+
+                <div id="bossQuestions"></div>
+
+                <button class="submit-boss" onclick="submitBoss()">SUBMIT FINAL ANSWERS</button>
+                <div id="boss-feedback"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Over Modal -->
+    <div class="modal" id="gameOverModal">
+        <div class="modal-content">
+            <h2>💀 GAME OVER 💀</h2>
+            <p>You've lost all your lives!<br>Time to start from the beginning...</p>
+            <button class="modal-btn" onclick="resetGame()">Start Over</button>
+        </div>
+    </div>
+
+    <script>
+        // Disable right-click, copy, paste, and autocorrect
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.addEventListener('copy', e => e.preventDefault());
+        document.addEventListener('cut', e => e.preventDefault());
+        document.addEventListener('paste', e => e.preventDefault());
+        document.addEventListener('selectstart', e => e.preventDefault());
+
+        // Disable autocorrect on all inputs
+        document.querySelectorAll('input, textarea').forEach(el => {
+            el.setAttribute('autocomplete', 'off');
+            el.setAttribute('autocorrect', 'off');
+            el.setAttribute('autocapitalize', 'off');
+            el.setAttribute('spellcheck', 'false');
+        });
+
+        // Game State
+        let gameState = {
+            lives: 3,
+            currentActivity: 'cloze',
+            completedActivities: [],
+            tfAnswered: 0,
+            matchedPairs: 0,
+            bossAnswers: {}
+        };
+
+        // Lives Management
+        function loseLife() {
+            if (gameState.lives > 0) {
+                gameState.lives--;
+                updateLivesDisplay();
+                
+                if (gameState.lives === 0) {
+                    setTimeout(() => {
+                        document.getElementById('gameOverModal').classList.add('active');
+                    }, 1000);
+                }
+            }
+        }
+
+        function updateLivesDisplay() {
+            const hearts = document.querySelectorAll('.life');
+            hearts.forEach((heart, index) => {
+                if (index >= gameState.lives) {
+                    heart.classList.add('lost');
+                } else {
+                    heart.classList.remove('lost');
+                }
+            });
+        }
+
+        function resetGame() {
+            gameState = {
+                lives: 3,
+                currentActivity: 'cloze',
+                completedActivities: [],
+                tfAnswered: 0,
+                matchedPairs: 0,
+                bossAnswers: {}
+            };
+            
+            updateLivesDisplay();
+            document.getElementById('gameOverModal').classList.remove('active');
+            
+            // Reset all activities
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.disabled = true;
+                btn.classList.remove('active', 'completed');
+            });
+            document.getElementById('nav-cloze').disabled = false;
+            document.getElementById('nav-cloze').classList.add('active');
+            
+            // Reset all content
+            location.reload();
+        }
+
+        // Navigation
+        function showActivity(activityId) {
+            if (document.getElementById('nav-' + activityId).disabled) return;
+            
+            document.querySelectorAll('.activity-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.getElementById(activityId).classList.add('active');
+            document.getElementById('nav-' + activityId).classList.add('active');
+            gameState.currentActivity = activityId;
+        }
+
+        function completeActivity(activityId) {
+            if (!gameState.completedActivities.includes(activityId)) {
+                gameState.completedActivities.push(activityId);
+                document.getElementById('nav-' + activityId).classList.add('completed');
+                
+                // Unlock next activity
+                const activities = ['cloze', 'truefalse', 'matching', 'multiple', 'cloze2'];
+                const currentIndex = activities.indexOf(activityId);
+                if (currentIndex < activities.length - 1) {
+                    document.getElementById('nav-' + activities[currentIndex + 1]).disabled = false;
+                } else {
+                    // All activities completed - unlock boss
+                    document.getElementById('nav-boss').disabled = false;
+                    initBoss();
+                }
+            }
+        }
+
+        // Drag and Drop functionality
+        let draggedElement = null;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            initDragAndDrop();
+            initMatching();
+        });
+
+        function initDragAndDrop() {
+            const draggables = document.querySelectorAll('.draggable-word');
+            const dropZones = document.querySelectorAll('.drop-zone');
+
+            draggables.forEach(draggable => {
+                draggable.addEventListener('dragstart', function() {
+                    draggedElement = this;
+                    this.classList.add('dragging');
+                });
+
+                draggable.addEventListener('dragend', function() {
+                    this.classList.remove('dragging');
+                });
+            });
+
+            dropZones.forEach(zone => {
+                zone.addEventListener('dragover', function(e) {
+                    e.preventDefault();
+                    this.classList.add('drag-over');
+                });
+
+                zone.addEventListener('dragleave', function() {
+                    this.classList.remove('drag-over');
+                });
+
+                zone.addEventListener('drop', function(e) {
+                    e.preventDefault();
+                    this.classList.remove('drag-over');
+                    
+                    if (draggedElement) {
+                        if (this.textContent.trim()) {
+                            const wordBank = draggedElement.parentElement;
+                            const returnWord = document.createElement('div');
+                            returnWord.className = 'draggable-word';
+                            returnWord.draggable = true;
+                            returnWord.textContent = this.textContent.trim();
+                            initSingleDraggable(returnWord);
+                            wordBank.appendChild(returnWord);
+                        }
+                        
+                        this.textContent = draggedElement.textContent;
+                        this.classList.add('filled');
+                        this.classList.remove('incorrect');
+                        draggedElement.remove();
+                        draggedElement = null;
+                    }
+                });
+
+                zone.addEventListener('click', function() {
+                    if (this.textContent.trim() && this.classList.contains('filled')) {
+                        const wordBank = this.closest('.cloze-container').querySelector('.word-bank');
+                        const returnWord = document.createElement('div');
+                        returnWord.className = 'draggable-word';
+                        returnWord.draggable = true;
+                        returnWord.textContent = this.textContent.trim();
+                        initSingleDraggable(returnWord);
+                        wordBank.appendChild(returnWord);
+                        this.textContent = '';
+                        this.classList.remove('filled', 'incorrect');
+                    }
+                });
+            });
+        }
+
+        function initSingleDraggable(element) {
+            element.addEventListener('dragstart', function() {
+                draggedElement = this;
+                this.classList.add('dragging');
+            });
+
+            element.addEventListener('dragend', function() {
+                this.classList.remove('dragging');
+            });
+        }
+
+        function checkCloze(activityId) {
+            const container = document.getElementById(activityId);
+            const dropZones = container.querySelectorAll('.drop-zone');
+            let correct = 0;
+            let total = dropZones.length;
+            let incorrectAnswers = [];
+
+            dropZones.forEach(zone => {
+                const answer = zone.dataset.answer;
+                const userAnswer = zone.textContent.trim();
+                
+                if (userAnswer.toLowerCase() === answer.toLowerCase()) {
+                    zone.classList.remove('incorrect');
+                    zone.classList.add('filled');
+                    correct++;
+                } else if (userAnswer) {
+                    zone.classList.add('incorrect');
+                    incorrectAnswers.push(answer);
+                }
+            });
+
+            const feedbackDiv = document.getElementById(activityId + '-feedback');
+            if (correct === total) {
+                feedbackDiv.innerHTML = '<div class="feedback success">🎉 Perfect! You got all ' + total + ' correct!</div>';
+                completeActivity(activityId);
+            } else {
+                loseLife();
+                if (gameState.lives > 0) {
+                    feedbackDiv.innerHTML = '<div class="feedback error">❌ Not quite right! You lost a life. Try again!<br><br><strong>Hint:</strong> Review the text carefully for words like "' + incorrectAnswers[0] + '"</div>';
+                }
+            }
+        }
+
+        // True/False functionality
+        function checkTF(button, userAnswer, questionIndex) {
+            const question = button.closest('.tf-question');
+            const correctAnswer = question.dataset.answer === 'true';
+            const buttons = question.querySelectorAll('.tf-btn');
+            const feedbackDiv = question.querySelector('.tf-feedback');
+            const feedbackText = question.dataset.feedback.split('|');
+            
+            buttons.forEach(btn => btn.disabled = true);
+            
+            if (userAnswer === correctAnswer) {
+                button.classList.add('correct');
+                gameState.tfAnswered++;
+                feedbackDiv.innerHTML = '<div class="feedback success" style="margin-top: 15px; font-size: 1em;">' + feedbackText[0] + '</div>';
+                
+                if (gameState.tfAnswered === 6) {
+                    setTimeout(() => {
+                        document.getElementById('truefalse').querySelector('.activity-intro').innerHTML = 
+                            '<div class="feedback success">🎉 Excellent! All questions answered correctly!</div>';
+                        completeActivity('truefalse');
+                    }, 1000);
+                }
+            } else {
+                button.classList.add('incorrect');
+                loseLife();
+                
+                if (gameState.lives > 0) {
+                    feedbackDiv.innerHTML = '<div class="feedback error" style="margin-top: 15px; font-size: 1em;">' + feedbackText[1] + '</div>';
+                    setTimeout(() => {
+                        buttons.forEach(btn => btn.disabled = false);
+                        button.classList.remove('incorrect');
+                    }, 3000);
+                }
+            }
+            
+            updateTFProgress();
+        }
+
+        function updateTFProgress() {
+            const progressFill = document.getElementById('tf-progress');
+            const percentage = (gameState.tfAnswered / 6) * 100;
+            progressFill.style.width = percentage + '%';
+            progressFill.textContent = gameState.tfAnswered + '/6';
+        }
+
+        // Matching functionality
+        let selectedMatch = null;
+
+        function initMatching() {
+            const matchItems = document.querySelectorAll('#matching .match-item');
+            
+            matchItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    if (this.classList.contains('matched')) return;
+                    
+                    if (!selectedMatch) {
+                        document.querySelectorAll('#matching .match-item').forEach(i => i.classList.remove('selected'));
+                        this.classList.add('selected');
+                        selectedMatch = this;
+                    } else {
+                        if (this === selectedMatch) {
+                            this.classList.remove('selected');
+                            selectedMatch = null;
+                        } else if (this.dataset.id === selectedMatch.dataset.id) {
+                            this.classList.add('matched');
+                            selectedMatch.classList.add('matched');
+                            this.classList.remove('selected');
+                            selectedMatch.classList.remove('selected');
+                            gameState.matchedPairs++;
+                            
+                            if (gameState.matchedPairs === 5) {
+                                setTimeout(() => {
+                                    document.getElementById('matching-feedback').innerHTML = 
+                                        '<div class="feedback success">🎉 Excellent! You matched all the quotes correctly!</div>';
+                                    completeActivity('matching');
+                                }, 500);
+                            }
+                            selectedMatch = null;
+                        } else {
+                            this.classList.add('selected');
+                            loseLife();
+                            
+                            if (gameState.lives > 0) {
+                                const wrongItem = this;
+                                setTimeout(() => {
+                                    wrongItem.classList.remove('selected');
+                                    selectedMatch.classList.remove('selected');
+                                    selectedMatch = null;
+                                    
+                                    document.getElementById('matching-feedback').innerHTML = 
+                                        '<div class="feedback error">❌ Wrong match! You lost a life. Try again!</div>';
+                                    setTimeout(() => {
+                                        document.getElementById('matching-feedback').innerHTML = '';
+                                    }, 2000);
+                                }, 800);
+                            }
+                        }
+                    }
+                });
+            });
+        }
+
+        // Multiple Choice functionality
+        let mcAnswered = [false, false, false, false];
+
+        function checkMC(option, isCorrect) {
+            const question = option.closest('.mc-question');
+            const options = question.querySelectorAll('.mc-option');
+            const feedbackDiv = question.querySelector('.mc-feedback');
+            const feedbackTexts = question.dataset.feedback.split('|');
+            const optionIndex = parseInt(option.dataset.index);
+            const correctIndex = parseInt(question.dataset.correct);
+            const questionIndex = Array.from(document.querySelectorAll('#multiple .mc-question')).indexOf(question);
+            
+            if (mcAnswered[questionIndex]) return;
+            
+            options.forEach(opt => opt.classList.add('disabled'));
+            
+            if (isCorrect) {
+                option.classList.add('correct');
+                mcAnswered[questionIndex] = true;
+                feedbackDiv.innerHTML = '<div class="feedback success" style="margin-top: 15px; font-size: 0.9em;">' + feedbackTexts[optionIndex] + '</div>';
+                
+                if (mcAnswered.every(a => a === true)) {
+                    setTimeout(() => {
+                        document.getElementById('multiple').querySelector('.activity-intro').innerHTML = 
+                            '<div class="feedback success">🎉 Perfect! All questions answered correctly!</div>';
+                        completeActivity('multiple');
+                    }, 1000);
+                }
+            } else {
+                option.classList.add('incorrect');
+                loseLife();
+                
+                if (gameState.lives > 0) {
+                    feedbackDiv.innerHTML = '<div class="feedback error" style="margin-top: 15px; font-size: 0.9em;">' + feedbackTexts[optionIndex] + '</div>';
+                    setTimeout(() => {
+                        options.forEach(opt => opt.classList.remove('disabled'));
+                        option.classList.remove('incorrect');
+                        feedbackDiv.innerHTML = '';
+                    }, 3000);
+                }
+            }
+        }
+
+        // Final Boss
+        const bossQuestions = [
+            {
+                q: "What does Banquo suspect about Macbeth at the beginning of Act 3?",
+                options: ["He is planning a feast", "He murdered Duncan", "He will abdicate", "He is going mad"],
+                correct: 1
+            },
+            {
+                q: "Why does Macbeth describe his crown as 'fruitless'?",
+                options: ["It's made of fake gold", "He has no heirs", "He can't wear it in public", "It was stolen"],
+                correct: 1
+            },
+            {
+                q: "What is Macbeth's main fear about Banquo?",
+                options: ["His strength in battle", "His noble character and the prophecy", "His friendship with Duncan", "His wealth"],
+                correct: 1
+            },
+            {
+                q: "Who does Macbeth hire to kill Banquo?",
+                options: ["Soldiers", "Murderers", "Guards", "Malcolm"],
+                correct: 1
+            },
+            {
+                q: "What does Fleance do during the attack?",
+                options: ["Fights back", "Dies with Banquo", "Escapes", "Calls for help"],
+                correct: 2
+            },
+            {
+                q: "What appears to Macbeth at the banquet?",
+                options: ["The witches", "Duncan's ghost", "Banquo's ghost", "A bloody dagger"],
+                correct: 2
+            },
+            {
+                q: "How does Lady Macbeth explain Macbeth's behavior to the guests?",
+                options: ["He's drunk", "He's tired", "It's an old illness", "He's possessed"],
+                correct: 2
+            },
+            {
+                q: "What does 'blood will have blood' mean?",
+                options: ["Family is important", "Murder leads to more murder", "Revenge is necessary", "Blood is sacred"],
+                correct: 1
+            },
+            {
+                q: "Why does Macbeth say he is 'in blood stepped in so far'?",
+                options: ["He's literally covered in blood", "He's gone too far to turn back", "He wants more power", "He's drowning"],
+                correct: 1
+            },
+            {
+                q: "What is ironic about Macbeth's words about missing Banquo at the banquet?",
+                options: ["Banquo is actually there", "He just had him murdered", "Banquo was never invited", "He hates Banquo"],
+                correct: 1
+            },
+            {
+                q: "Unlike Macbeth, how does Banquo respond to his ambition?",
+                options: ["He murders too", "He refuses to act through evil", "He gives up entirely", "He challenges Macbeth"],
+                correct: 1
+            },
+            {
+                q: "What literary device is 'fruitless crown' an example of?",
+                options: ["Simile", "Metaphor", "Personification", "Alliteration"],
+                correct: 1
+            },
+            {
+                q: "What theme is developed through Macbeth's increasing paranoia?",
+                options: ["Love conquers all", "Power corrupts", "Family matters", "Honesty prevails"],
+                correct: 1
+            },
+            {
+                q: "What does Macbeth plan to do after the banquet?",
+                options: ["Flee Scotland", "Visit the witches", "Confess his crimes", "Crown Lady Macbeth"],
+                correct: 1
+            },
+            {
+                q: "Why is Fleance's escape significant?",
+                options: ["He'll tell everyone", "The prophecy can still come true", "He'll avenge Banquo", "He becomes king"],
+                correct: 1
+            },
+            {
+                q: "What does seeing the ghost reveal about Macbeth?",
+                options: ["He's going blind", "His guilt", "He's brave", "He's powerful"],
+                correct: 1
+            },
+            {
+                q: "How does Lady Macbeth's role change in Act 3?",
+                options: ["She becomes more violent", "She has to cover for Macbeth", "She leaves him", "She becomes queen"],
+                correct: 1
+            },
+            {
+                q: "What does Macbeth mean by Banquo having 'royalty of nature'?",
+                options: ["He's literally royal", "He has a noble character", "He's wealthy", "He's handsome"],
+                correct: 1
+            },
+            {
+                q: "Why doesn't Macbeth kill Banquo himself?",
+                options: ["He's too busy", "He wants distance from the crime", "He's afraid", "Lady Macbeth stops him"],
+                correct: 1
+            },
+            {
+                q: "What is the dramatic irony of Macbeth's toast to Banquo?",
+                options: ["Banquo is dead and Macbeth killed him", "Banquo is coming late", "Banquo doesn't like toasts", "Nothing is ironic"],
+                correct: 0
+            }
+        ];
+
+        function initBoss() {
+            const container = document.getElementById('bossQuestions');
+            container.innerHTML = '';
+            
+            bossQuestions.forEach((q, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'boss-question';
+                questionDiv.innerHTML = `
+                    <h4>Question ${index + 1}: ${q.q}</h4>
+                    ${q.options.map((opt, i) => `
+                        <div class="boss-option" data-question="${index}" data-answer="${i}" onclick="selectBossAnswer(this)">
+                            ${String.fromCharCode(65 + i)}) ${opt}
+                        </div>
+                    `).join('')}
+                `;
+                container.appendChild(questionDiv);
+            });
+        }
+
+        function selectBossAnswer(option) {
+            const questionIndex = parseInt(option.dataset.question);
+            const answerIndex = parseInt(option.dataset.answer);
+            
+            // Deselect other options in this question
+            document.querySelectorAll(`.boss-option[data-question="${questionIndex}"]`).forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            
+            option.classList.add('selected');
+            gameState.bossAnswers[questionIndex] = answerIndex;
+        }
+
+        function submitBoss() {
+            if (Object.keys(gameState.bossAnswers).length < 20) {
+                alert('Please answer all 20 questions before submitting!');
+                return;
+            }
+            
+            let score = 0;
+            bossQuestions.forEach((q, index) => {
+                if (gameState.bossAnswers[index] === q.correct) {
+                    score++;
+                }
+            });
+            
+            document.getElementById('bossScore').textContent = score;
+            
+            // Disable all options
+            document.querySelectorAll('.boss-option').forEach(opt => {
+                opt.classList.add('disabled');
+            });
+            document.querySelector('.submit-boss').disabled = true;
+            
+            let feedback = '';
+            if (score === 20) {
+                feedback = '<div class="feedback success" style="font-size: 1.5em; margin-top: 30px;">🏆 PERFECT SCORE! You are a Macbeth master! 🏆</div>';
+            } else if (score >= 16) {
+                feedback = '<div class="feedback success" style="font-size: 1.3em; margin-top: 30px;">⭐ Excellent work! You scored ' + score + '/20! ⭐</div>';
+            } else if (score >= 12) {
+                feedback = '<div class="feedback partial" style="font-size: 1.3em; margin-top: 30px;">📚 Good job! You scored ' + score + '/20. Review the scenes for mastery!</div>';
+            } else {
+                feedback = '<div class="feedback error" style="font-size: 1.3em; margin-top: 30px;">📖 You scored ' + score + '/20. Keep studying Macbeth to improve!</div>';
+            }
+            
+            document.getElementById('boss-feedback').innerHTML = feedback;
+        }
+    </script>
+</body>
+</html>
