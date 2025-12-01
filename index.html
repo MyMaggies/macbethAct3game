@@ -283,6 +283,14 @@
             opacity: 0.5;
         }
 
+        .draggable-word.selected {
+            transform: scale(1.15);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+            border-color: #fff;
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            color: #1a1a2e;
+        }
+
         /* True/False Styles */
         .tf-question {
             background: rgba(20, 20, 40, 0.6);
@@ -874,7 +882,8 @@
         <!-- Activity 1: Drag and Drop Cloze -->
         <div id="cloze" class="activity-section active">
             <h2>Activity 1: Drag and Drop - Banquo's Suspicions</h2>
-            <p class="activity-intro">Drag the correct words to complete the passage about Banquo's thoughts.</p>
+            <p class="activity-intro">Drag the correct words to complete the passage about Banquo's thoughts.<br>
+            <strong>📱 On tablets/mobile:</strong> Tap a word to select it (it will glow gold), then tap a blank to fill it in.</p>
             
             <div class="cloze-container">
                 <div class="cloze-text">
@@ -1039,7 +1048,8 @@
         <!-- Activity 5: Advanced Cloze -->
         <div id="cloze2" class="activity-section">
             <h2>Activity 5: Advanced Fill in the Blanks</h2>
-            <p class="activity-intro">Complete these more challenging passages about Macbeth's state of mind.</p>
+            <p class="activity-intro">Complete these more challenging passages about Macbeth's state of mind.<br>
+            <strong>📱 On tablets/mobile:</strong> Tap a word to select it (it will glow gold), then tap a blank to fill it in.</p>
             
             <div class="cloze-container">
                 <div class="cloze-text">
@@ -1270,6 +1280,7 @@
 
         // Drag and Drop functionality
         let draggedElement = null;
+        let selectedWord = null;
 
         document.addEventListener('DOMContentLoaded', function() {
             initDragAndDrop();
@@ -1289,6 +1300,21 @@
                 draggable.addEventListener('dragend', function() {
                     this.classList.remove('dragging');
                 });
+
+                // Click/Touch to select
+                draggable.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    document.querySelectorAll('.draggable-word').forEach(w => w.classList.remove('selected'));
+                    this.classList.add('selected');
+                    selectedWord = this;
+                });
+
+                draggable.addEventListener('touchstart', function(e) {
+                    e.stopPropagation();
+                    document.querySelectorAll('.draggable-word').forEach(w => w.classList.remove('selected'));
+                    this.classList.add('selected');
+                    selectedWord = this;
+                }, {passive: true});
             });
 
             dropZones.forEach(zone => {
@@ -1324,8 +1350,64 @@
                     }
                 });
 
-                zone.addEventListener('click', function() {
-                    if (this.textContent.trim() && this.classList.contains('filled')) {
+                // Click/Touch to fill with selected word OR remove existing word
+                zone.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    
+                    if (selectedWord && !this.classList.contains('filled')) {
+                        // Fill empty zone with selected word
+                        if (this.textContent.trim()) {
+                            const wordBank = this.closest('.cloze-container').querySelector('.word-bank');
+                            const returnWord = document.createElement('div');
+                            returnWord.className = 'draggable-word';
+                            returnWord.draggable = true;
+                            returnWord.textContent = this.textContent.trim();
+                            initSingleDraggable(returnWord);
+                            wordBank.appendChild(returnWord);
+                        }
+                        
+                        this.textContent = selectedWord.textContent;
+                        this.classList.add('filled');
+                        this.classList.remove('incorrect');
+                        selectedWord.remove();
+                        selectedWord = null;
+                        document.querySelectorAll('.draggable-word').forEach(w => w.classList.remove('selected'));
+                    } else if (this.textContent.trim() && this.classList.contains('filled')) {
+                        // Return word to bank
+                        const wordBank = this.closest('.cloze-container').querySelector('.word-bank');
+                        const returnWord = document.createElement('div');
+                        returnWord.className = 'draggable-word';
+                        returnWord.draggable = true;
+                        returnWord.textContent = this.textContent.trim();
+                        initSingleDraggable(returnWord);
+                        wordBank.appendChild(returnWord);
+                        this.textContent = '';
+                        this.classList.remove('filled', 'incorrect');
+                    }
+                });
+
+                zone.addEventListener('touchend', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    if (selectedWord && !this.classList.contains('filled')) {
+                        if (this.textContent.trim()) {
+                            const wordBank = this.closest('.cloze-container').querySelector('.word-bank');
+                            const returnWord = document.createElement('div');
+                            returnWord.className = 'draggable-word';
+                            returnWord.draggable = true;
+                            returnWord.textContent = this.textContent.trim();
+                            initSingleDraggable(returnWord);
+                            wordBank.appendChild(returnWord);
+                        }
+                        
+                        this.textContent = selectedWord.textContent;
+                        this.classList.add('filled');
+                        this.classList.remove('incorrect');
+                        selectedWord.remove();
+                        selectedWord = null;
+                        document.querySelectorAll('.draggable-word').forEach(w => w.classList.remove('selected'));
+                    } else if (this.textContent.trim() && this.classList.contains('filled')) {
                         const wordBank = this.closest('.cloze-container').querySelector('.word-bank');
                         const returnWord = document.createElement('div');
                         returnWord.className = 'draggable-word';
@@ -1338,6 +1420,12 @@
                     }
                 });
             });
+
+            // Click/touch outside to deselect
+            document.addEventListener('click', function() {
+                selectedWord = null;
+                document.querySelectorAll('.draggable-word').forEach(w => w.classList.remove('selected'));
+            });
         }
 
         function initSingleDraggable(element) {
@@ -1349,6 +1437,21 @@
             element.addEventListener('dragend', function() {
                 this.classList.remove('dragging');
             });
+
+            // Click/Touch to select
+            element.addEventListener('click', function(e) {
+                e.stopPropagation();
+                document.querySelectorAll('.draggable-word').forEach(w => w.classList.remove('selected'));
+                this.classList.add('selected');
+                selectedWord = this;
+            });
+
+            element.addEventListener('touchstart', function(e) {
+                e.stopPropagation();
+                document.querySelectorAll('.draggable-word').forEach(w => w.classList.remove('selected'));
+                this.classList.add('selected');
+                selectedWord = this;
+            }, {passive: true});
         }
 
         function checkCloze(activityId) {
